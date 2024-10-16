@@ -1,0 +1,27 @@
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("api/[controller]")]
+public class BooksController : ControllerBase
+{
+    private readonly ILibraryService _libraryService;
+
+    public BooksController(ILibraryService libraryService)
+    {
+        _libraryService = libraryService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<Book>>> GetBooks()
+    {
+        var books = await _libraryService.GetBooksAsync();
+        return Ok(books);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> AddBook([FromBody] Book book)
+    {
+        await _libraryService.AddBookAsync(book);
+        return Ok();
+    }
+}

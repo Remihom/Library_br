@@ -1,0 +1,26 @@
+public interface ILibraryService
+{
+    Task<List<Book>> GetBooksAsync();
+    Task AddBookAsync(Book book);
+}
+
+public class LibraryService : ILibraryService
+{
+    private readonly AppDbContext _context;
+
+    public LibraryService(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<List<Book>> GetBooksAsync()
+    {
+        return await _context.Books.Include(b => b.Author).ToListAsync();
+    }
+
+    public async Task AddBookAsync(Book book)
+    {
+        _context.Books.Add(book);
+        await _context.SaveChangesAsync();
+    }
+}
